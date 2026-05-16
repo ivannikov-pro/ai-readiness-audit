@@ -1,6 +1,8 @@
-# AI Readiness Audit — Checklist v0.2
+# AI Readiness Audit — Checklist v0.3
 
-> Working draft адаптации 26-критерийной методологии Gumeniuk + extended крауcler matrix (per-LLM signals), content patterns, и **F. Ranking Signals** category. Используется (1) как self-audit для собственного сайта, (2) как deliverable Light-аудита для клиентов, (3) как лид-магнит на странице услуги.
+> Working draft адаптации 26-критерийной методологии Gumeniuk + extended крауcler matrix (per-LLM signals), content patterns, **F. Ranking Signals** category, и **G. AI-Agent Tool Registrations** для discoverability в AI coding agents (Cursor, Claude Code, Cline). Используется (1) как self-audit для собственного сайта, (2) как deliverable Light-аудита для клиентов, (3) как лид-магнит на странице услуги.
+>
+> **v0.3 changes (2026-05-16)**: Added **G. AI-Agent Tool Registrations** (20 pts, 7 items: llms.txt, Context7, npm/PyPI metadata, GitHub README, MCP servers) — отдельная воронка для AI coding agents, не overlap с E/F. Based on AI Agent Reference Tools research catalogue из 16 tools.
 >
 > **v0.2 changes**: Added F category (citation hooks, answer-first, 100-200 rule), AI crawler matrix, content patterns section. Based on empirical research showing GEO strategies improve AI visibility by up to 40% ([arXiv: Generative Engine Optimization](https://arxiv.org/)).
 
@@ -106,6 +108,63 @@ LLM-кроулеры (GPTBot, ClaudeBot, PerplexityBot) JS не исполняю
 
 ---
 
+## G. AI-Agent Tool Registrations (NEW v0.3, 20 points, 7 items)
+
+Видим ли вас AI **coding** agents (Cursor, Claude Code, Cline, Aider, Continue.dev, Windsurf) — отдельная воронка от AI-search agents (A-F). Большинство coding-агентов получают docs через **Context7 MCP**, **llms.txt**, или **direct URL fetch** — публичных каталогов почти нет.
+
+**Применимость**: API-first SaaS, developer tools, libraries / SDKs. НЕ для consumer B2B SaaS без public API.
+
+- [ ] **G1 / 4 pts** — `llms.txt` на docs domain (повторяет A1 если docs.X.com, но проверяется отдельно для multi-domain setups).
+- [ ] **G2 / 2 pts** — `llms-full.txt` companion file.
+- [ ] **G3 / 4 pts** — Зарегистрирован в [Context7](https://context7.com). Verify: search на context7.com или MCP `resolve-library-id` tool. **Главный** инструмент для libraries/SDKs.
+- [ ] **G4 / 3 pts** — npm/PyPI metadata полный: description, keywords (включая `ai`/`mcp` если applicable), repository, homepage. README в Markdown.
+- [ ] **G5 / 3 pts** — GitHub README production-grade: >500 слов, badges, install, quickstart, API ref, examples, license.
+- [ ] **G6 / 2 pts** — MCP server available (`/mcp`, `/~gitbook/mcp`, или custom endpoint). Optional но сильный signal.
+- [ ] **G7 / 2 pts** — Cross-links: все registries (npm, PyPI, GPT Store) ссылаются на canonical docs domain.
+
+**Total**: 20 pts.
+
+### Scoring guide для G
+
+| Score | Level | Что значит |
+|---|---|---|
+| 16-20 | 🟢 Excellent | Полностью discoverable AI coding agents |
+| 10-15 | 🟡 Good | Базовое покрытие, missing some channels |
+| 5-9 | 🟠 Needs work | Significant gaps |
+| 0-4 | 🔴 Poor | Invisible для AI coding agents |
+
+### Decision tree (нужно ли G применять)
+
+```
+Product = library/SDK/package?
+├── YES → G1-G7 all apply (20 pts max)
+│   ├── npm/PyPI? → G4 weight up
+│   └── Has docs site? → G1, G2, G6 weight up
+└── NO (SaaS with public API)
+    ├── Has docs site? → G1, G2, G6, G7 apply (~10 pts max)
+    └── No public API/docs? → G N/A — skip category
+```
+
+### G ≠ E/F overlap (важно)
+
+| Category | Focus | G overlap |
+|---|---|---|
+| E. Hygiene (E1 no-JS) | Web crawlers (search engines + LLM) | Minimal — E = HTML serving, G = registry/MCP |
+| F. Entity Authority | Brand identity for AI search engines | Minimal — F = ChatGPT/Claude/Perplexity, G = Cursor/Claude Code/Cline |
+
+**G — отдельная воронка**: AI-coding-agent discovery ≠ AI-search-engine discovery. Можно набрать 95/100 в A-F и при этом быть невидимым для Cursor.
+
+### Top 4 actionable priorities для G (если ничего нет)
+
+1. 🔴 **P0**: llms.txt + llms-full.txt (G1+G2) — 30 min, universal applicability
+2. 🔴 **P0**: Context7 registration (G3) — 15 min, для libraries 
+3. 🔴 **P0**: npm/PyPI metadata (G4) — 15 min, для packages
+4. 🟡 **P1**: GitHub README production-grade (G5) — 1-2h
+
+Source: [ai-agent-tools-deep-dive-v1.md research](https://github.com/ivannikov-pro/ai-readiness-audit) (catalogue из 16 AI agent tools).
+
+---
+
 ## AI Crawler Matrix (reference, not scored)
 
 Известные публичные LLM-кроулеры на 2026 Q2. Используется при настройке robots.txt (A3) и WAF rules.
@@ -168,7 +227,19 @@ Citation rate observed in empirical analyses 2025-2026:
 
 ## Скоринг
 
-**Total v0.2 = A (18) + B (22) + C (25) + D (20) + E (15) + F (25) = 125 points max.**
+**Total v0.3 = A (18) + B (22) + C (25) + D (20) + E (15) + F (25) + G (20) = 145 points max.**
+
+When G applies (API-first SaaS / libraries / SDKs):
+```
+≥110/145 (76%+) → AI-ready across both search + coding agents
+85-109 (59-75%) → Workable, gaps in coding-agent visibility
+60-84 (41-58%) → Significant gaps
+<60 (<41%)    → Not citable AND not used by coding agents
+```
+
+When G NOT applicable (consumer SaaS, content sites): use legacy v0.2 (125 pts) or v0.1 (100 pts) scoring.
+
+**Legacy v0.2 = A (18) + B (22) + C (25) + D (20) + E (15) + F (25) = 125 points max.**
 
 Normalized:
 ```
