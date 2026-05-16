@@ -1,6 +1,8 @@
-# AI Readiness Audit — Checklist v0.1
+# AI Readiness Audit — Checklist v0.2
 
-> Working draft адаптации 26-критерийной методологии Gumeniuk + дополнения под B2B SaaS ICP. Используется (1) как self-audit для собственного сайта, (2) как deliverable Light-аудита для клиентов, (3) как лид-магнит на странице услуги.
+> Working draft адаптации 26-критерийной методологии Gumeniuk + extended крауcler matrix (per-LLM signals), content patterns, и **F. Ranking Signals** category. Используется (1) как self-audit для собственного сайта, (2) как deliverable Light-аудита для клиентов, (3) как лид-магнит на странице услуги.
+>
+> **v0.2 changes**: Added F category (citation hooks, answer-first, 100-200 rule), AI crawler matrix, content patterns section. Based on empirical research showing GEO strategies improve AI visibility by up to 40% ([arXiv: Generative Engine Optimization](https://arxiv.org/)).
 
 **Что мерим**: насколько публичный продукт клиента (сайт + docs + API + контент) понятен и цитируем для AI-агентов и LLM-ответчиков (ChatGPT, Claude, Perplexity, Gemini, Google AI Overview).
 
@@ -86,14 +88,103 @@ LLM-кроулеры (GPTBot, ClaudeBot, PerplexityBot) JS не исполняю
 
 ---
 
+## F. Ranking Signals (NEW v0.2, 25 points, 6 items)
+
+Эмпирические факторы которые влияют на frequency цитирования. Сверх structural requirements A-E.
+
+- [ ] **F1 / 5 pts** — **Answer-first format**: первые 30% контента отвечают на implicit question страницы. Прямой ответ в первых 40-60 словах.
+- [ ] **F2 / 4 pts** — **100-200 word rule**: один header (H2/H3) каждые 100-200 слов. Semantic breakpoints для LLM chunking. Страницы с <1 header на 400 слов — significantly реже цитируются.
+- [ ] **F3 / 5 pts** — **Semantic tables**: factual data (pricing, comparison, feature matrices) в `<table>` с `<thead>`, descriptive columns. Tables дают **2.5x citation rate** против unstructured prose.
+- [ ] **F4 / 4 pts** — **Citation hooks**: 
+  - Verifiable statistics с источниками: +22% citation likelihood
+  - Strategic pull quotes (`<blockquote>` с aphoristic claims): +37% citation likelihood
+  - Минимум 2-3 hook'а на key page.
+- [ ] **F5 / 4 pts** — **Sub-query coverage**: для каждого main keyword — 5-10 sub-queries покрыты через H3/sub-sections. Ranking на main+sub = **+161% visibility**.
+- [ ] **F6 / 3 pts** — **Recency / freshness signals**: `dateModified` <60 дней на key pages. RAG systems предпочитают контент updated 30-90 дней.
+
+**Pricing methodology note**: F-категория особенно важна для **founder-led brands** (студии, агентства, personal SaaS). См. companion [entity-authority-checklist.md](./entity-authority-checklist.md) для дополнительных 13 critериев по entity authority (Schema / Platform / Consistency / External).
+
+---
+
+## AI Crawler Matrix (reference, not scored)
+
+Известные публичные LLM-кроулеры на 2026 Q2. Используется при настройке robots.txt (A3) и WAF rules.
+
+| Provider | Bot Name | Purpose | JS Render | Honors robots.txt |
+|----------|----------|---------|-----------|--------------------|
+| OpenAI | `GPTBot` | Training | ❌ | ✅ |
+| OpenAI | `OAI-SearchBot` | Search indexing | ❌ | ✅ |
+| OpenAI | `ChatGPT-User` | User-triggered fetch | ❌ | ⚠️ Partial |
+| Anthropic | `ClaudeBot` | Training | ❌ | ✅ |
+| Anthropic | `Claude-SearchBot` | Search indexing | ❌ | ✅ |
+| Anthropic | `Claude-User` | User-triggered fetch | ❌ | ✅ |
+| Perplexity | `PerplexityBot` | Search indexing | ❌ | ✅ |
+| Perplexity | `Perplexity-User` | User-triggered fetch | ❌ | ❌ **Ignores robots.txt** |
+| Google | `Google-Extended` | Opt-out token (not crawler) | N/A | N/A |
+| Apple | `Applebot-Extended` | Opt-out token | N/A | N/A |
+| ByteDance | `Bytespider` | Training | ❌ | ✅ |
+| Cohere | `cohere-ai` | Training | ❌ | ✅ |
+| Meta | `meta-externalagent` | Training | ❌ | ✅ |
+| Diffbot | `Diffbot` | Data extraction | ⚠️ Some | ✅ |
+| Google AIO | (Chromium-based) | AI Overview generation | ✅ | ✅ |
+
+**Key takeaways**:
+1. **Только Google AIO рендерит JS** — SPA без SSR невидимы для всех остальных. **E1 gate критичен.**
+2. **Perplexity-User игнорирует robots.txt** — клиентов надо предупреждать, что блокировка возможна только через WAF/IP filter (не через `Disallow:`).
+3. **lastmod в sitemap критичен для PerplexityBot** (freshness priority).
+4. Deprecated: `Claude-Web`, `Anthropic-AI` — заменены актуальными выше.
+5. IP ranges публикуются провайдерами: [openai.com/gptbot.json](https://openai.com/gptbot.json), [perplexity.com/perplexitybot.json](https://www.perplexity.com/perplexitybot.json).
+
+### Signal Matrix — что каждый prioritises
+
+| Signal | OpenAI | Anthropic | Perplexity | Google AIO |
+|--------|--------|-----------|------------|------------|
+| canonical | ✅ | ✅ | ✅ | ✅ |
+| JSON-LD schema | ✅ | ✅ | ✅ | ✅ Native |
+| OpenGraph | ✅ | ✅ | ✅ | ⚠️ Secondary |
+| sitemap.xml | ✅ | ✅ | ✅ | ✅ |
+| lastmod | ⚠️ | ⚠️ | ✅ **High weight** | ✅ |
+| noindex | ✅ | ✅ | ✅ | ✅ |
+| JS content | ❌ | ❌ | ❌ | ✅ |
+
+---
+
+## Content patterns (reference, see F4)
+
+Citation rate observed in empirical analyses 2025-2026:
+
+| Format | Citation rate | Why |
+|--------|--------------|-----|
+| Comprehensive Guides (с таблицами) | ~67% | High data density, easy extraction |
+| Product Pages (feature matrices) | 60–70% | High-confidence transactional data |
+| How-To Guides (structured) | ~54% | Clear numbered step-by-step |
+| Comparative Listicles ("X vs Y") | 32.5–50% | Matches "best of" intents |
+| FAQ embedded в substantive pages | ~47% of cited pages contain FAQ sections | Mimics prompt-answer LLM behavior |
+| Dedicated FAQ pages (standalone) | <1% direct | Too thin для standalone citation |
+
+**Action**: embed FAQs в service/pricing pages (with FAQPage schema), don't создавать standalone `/faq` page expecting citation.
+
+---
+
 ## Скоринг
 
+**Total v0.2 = A (18) + B (22) + C (25) + D (20) + E (15) + F (25) = 125 points max.**
+
+Normalized:
+```
+≥95/125 (76%+) → AI-ready (strong citation prospect)
+75-94 (60-75%) → Workable, conversion gaps
+50-74 (40-59%) → Significant gaps, AI agents miss content
+<50  (<40%)    → Not citable, urgent fix needed
+```
+
+Or скоринг **without F** (legacy v0.1 compatibility, 100 points max):
 ```
 Total = A + B + C + D + E
-≥75/100 → AI-ready (strong citation prospect)
-50–74   → Workable, conversion gaps
-30–49   → Significant gaps, AI agents miss content
-<30     → Not citable, urgent fix needed
+≥75/100 → AI-ready
+50–74   → Workable
+30–49   → Significant gaps
+<30     → Not citable
 ```
 
 **E1 fail (контент за JS)** → отметить *UNRELIABLE* в отчёте независимо от total. Это первый fix перед любой другой работой.
