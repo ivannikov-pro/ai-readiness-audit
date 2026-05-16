@@ -95,7 +95,7 @@ fi
 robots_status=$(fetch "$URL/robots.txt")
 if [ "$robots_status" = "200" ]; then
   robots_body=$(fetch_body "$URL/robots.txt")
-  ai_agents=$(echo "$robots_body" | grep -ciE "(GPTBot|ClaudeBot|PerplexityBot|Google-Extended|cohere-ai|anthropic-ai|meta-externalagent|Applebot-Extended)" || echo 0)
+  ai_agents=$(echo "$robots_body" | grep -ciE "(GPTBot|ClaudeBot|PerplexityBot|Google-Extended|cohere-ai|anthropic-ai|meta-externalagent|Applebot-Extended)" || true)
   if [ "$ai_agents" -ge 3 ]; then
     check 4 "A3 / robots.txt AI policy" "PASS" "$ai_agents AI crawler entries found"
   elif [ "$ai_agents" -ge 1 ]; then
@@ -139,7 +139,7 @@ else
 fi
 
 # B5 — OpenGraph
-og_count=$(echo "$root_html" | grep -ciE '<meta[^>]+property="og:' || echo 0)
+og_count=$(echo "$root_html" | grep -ciE '<meta[^>]+property="og:' || true)
 if [ "$og_count" -ge 4 ]; then
   check 3 "B5 / OpenGraph tags" "PASS" "$og_count og:* tags found"
 elif [ "$og_count" -ge 2 ]; then
