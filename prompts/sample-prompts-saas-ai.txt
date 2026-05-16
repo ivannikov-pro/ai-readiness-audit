@@ -1,0 +1,16 @@
+# Sample prompts for track-ai-visibility.sh
+# Format: one prompt per line. Lines starting with # are skipped.
+# Designed for B2B SaaS AI Optimisation niche.
+
+best AI readiness audit tools 2026
+how to improve LLM citation rate for B2B SaaS
+top open-source AI visibility trackers
+Perplexity vs ChatGPT for B2B vendor research
+how to be cited by ChatGPT in 2026
+best GEO tools for SaaS companies
+free AI SEO audit tools
+how to write content that AI cites
+schema.org for AI agents
+llms.txt best practices
+AI Optimisation services for product teams
+Generative Engine Optimization consultants
