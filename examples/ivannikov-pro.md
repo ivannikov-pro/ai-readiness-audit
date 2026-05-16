@@ -2,10 +2,15 @@
 
 > Sample audit report — the methodology applied to its own author's site as a meta self-case.
 
-**Score**: 80/100 (automated subset) / ~69/100 (full manual)
-**Date**: 2026-05-16
+**Score**: 85/100 (automated v0.2 script) / ~85/100 (full manual A+B+E)
+**Date**: 2026-05-16 (post Week 1 + .md mirrors)
 **E1 gate**: PASS
-**Tool**: `scripts/check-ai-readiness.sh`
+**Tool**: `scripts/check-ai-readiness.sh` v0.2
+
+**Score progression in one day**:
+- Morning: ~42/100 (no llms.txt, generic robots, no AI-policy)
+- After Week 1 quick wins: 80/100 (auto) / ~69/100 (manual)
+- After .md mirrors (B1 closed): **85/100** auto / **~85/100** manual
 
 ---
 
