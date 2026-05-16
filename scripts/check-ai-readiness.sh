@@ -120,9 +120,9 @@ else
   check 3 "A4 / sitemap.xml" "FAIL" "HTTP $sitemap_status"
 fi
 
-# B2 — JSON-LD on home page
-if echo "$root_html" | grep -qE 'type="application/ld\+json"'; then
-  if echo "$root_html" | grep -qE '"@type":\s*"(TechArticle|Article|APIReference|Person|Organization)"'; then
+# B2 — JSON-LD on home page (tolerant of attribute quoting and whitespace)
+if echo "$root_html" | grep -qiE 'application/ld\+json'; then
+  if echo "$root_html" | grep -qE '"@type"[[:space:]]*:[[:space:]]*"?(TechArticle|Article|APIReference|Person|Organization|SoftwareApplication|FAQPage|HowTo)"?'; then
     check 5 "B2 / JSON-LD schema" "PASS" "TechArticle/Person/Organization schema present"
   else
     check 5 "B2 / JSON-LD schema" "PARTIAL" "JSON-LD present but generic"
@@ -138,8 +138,8 @@ else
   check 4 "B3 / canonical link" "FAIL" "Missing"
 fi
 
-# B5 — OpenGraph
-og_count=$(echo "$root_html" | grep -ciE '<meta[^>]+property="og:' || true)
+# B5 — OpenGraph (tolerant of [^>]* zero-or-more and single-quote variants)
+og_count=$(echo "$root_html" | grep -ciE '<meta[^>]*property=[^>]*og:' || true)
 if [ "$og_count" -ge 4 ]; then
   check 3 "B5 / OpenGraph tags" "PASS" "$og_count og:* tags found"
 elif [ "$og_count" -ge 2 ]; then
