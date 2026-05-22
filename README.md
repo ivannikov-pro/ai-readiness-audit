@@ -85,7 +85,7 @@ MIT — see [LICENSE](./LICENSE).
 
 ## Author
 
-Aleksandr Ivannikov / [IVANNIKOV.PRO](https://ivannikov.pro) — premium engineering studio.
+Aleksandr Ivannikov / [IVANNIKOV.PRO](https://ivannikov.pro) — premium engineering team.
 
 13+ years of shipping production systems for B2B SaaS, AI-native products, and Web3 teams.
 

@@ -94,7 +94,7 @@ Total F = sum of F1–F13
 - **Audit Plus** ($2,500–$3,500): A+B+E+F — для founder-led brands где entity authority критична.
 - **Full Audit** ($4,000–$5,500): A+B+C+D+E+F — для B2B SaaS с public API + founder presence.
 
-Каждый шаг — +$1K в среднем. F-категория наиболее ценна для studio/freelancer-led клиентов.
+Каждый шаг — +$1K в среднем. F-категория наиболее ценна для team/freelancer-led клиентов.
 
 ---
 
